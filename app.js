@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 // middleware to handle uploaded files
 var fileUpload = require('express-fileupload');
+var env = require('dotenv').config({ path: './.env' });
 
 var indexRouter = require('./routes/index');
 var visionRouter = require('./routes/vision');

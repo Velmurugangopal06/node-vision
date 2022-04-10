@@ -7,16 +7,12 @@ router.post('/classify', function(req, res, next) {
   let response = ["shoe", "red", "nike"];
 
   // Your code starts here //
-  let region = 'ap-southeast-1';
-  let accessKeyId = 'AKIARAR74F5B2ZJFROOU';
-  let secretAccessKey = '58t6"shoe", "red", "nike"FYfBVhi0FhEKFwxOWExsgASY3dtg6EHAPcVP';
-
   if(req?.files?.file?.data?.length > 0) {
     // Update AWS Config as Local have config
     AWS.config.update({
-      accessKeyId, 
-      secretAccessKey, 
-      region
+      accessKeyId: process.env.ACCESS_KEY_ID, 
+      secretAccessKey: process.env.SECRET_ACCESS_KEY, 
+      region: process.env.REGION
     });
 
     const client = new AWS.Rekognition();
