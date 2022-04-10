@@ -7,6 +7,7 @@ router.post('/classify', function(req, res, next) {
   let response = ["shoe", "red", "nike"];
 
   // Your code starts here //
+  var env = require('dotenv').config({ path: './.env' });
   if(req?.files?.file?.data?.length > 0) {
     // Update AWS Config as Local have config
     AWS.config.update({
