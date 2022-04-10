@@ -7,29 +7,46 @@ router.post('/classify', function(req, res, next) {
   let response = ["shoe", "red", "nike"];
 
   // Your code starts here //
-  const config = new AWS.Config({
-    accessKeyId: 'AKIARAR74F5B2ZJFROOU',
-    secretAccessKey: '58t6FYfBVhi0FhEKFwxOWExsgASY3dtg6EHAPcVP',
-    region: 'ap-south-1'
-  });
+  let region = 'ap-southeast-1';
+  let accessKeyId = 'AKIARAR74F5B2ZJFROOU';
+  let secretAccessKey = '58t6"shoe", "red", "nike"FYfBVhi0FhEKFwxOWExsgASY3dtg6EHAPcVP';
 
-  const client = new AWS.Rekognition();
-  const rekognitionRequest = {
-    Image: {
-      Bytes: req.files.file.data
-    },
-    MaxLabels: 10
-  };
+  if(req?.files?.file?.data?.length > 0) {
+    // Update AWS Config as Local have config
+    AWS.config.update({
+      accessKeyId, 
+      secretAccessKey, 
+      region
+    });
 
-  client.detectLabels(rekognitionRequest, function(error, response) {
-    if(error) console.error(error, error.stack);
-    else console.log("Response from AWS ", response);
-  })
+    const client = new AWS.Rekognition();
+    //
+    const rekognitionRequest = {
+      Image: {
+        Bytes: req.files.file.data
+      }
+    };
+    //
+    client.detectLabels(rekognitionRequest, function(awsRekError, awsRekData) {
+      if(awsRekError) 
+        res.json({
+          "error": awsRekError,
+        })
+      else {
+        response = awsRekData?.Labels?.map((m) => {
+                    return m.Name
+                  });
+        res.json({
+          "labels": response
+        });
+      }
+    })
+  } else {
+    res.json({
+      "error": "Uploaded File is unreadable or not a valid filetype to process"
+    })
+  }
   // Your code ends here //
-
-  res.json({
-    "labels": response
-  });
 });
 
 module.exports = router;
